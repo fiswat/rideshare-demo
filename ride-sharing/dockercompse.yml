@@ -1,0 +1,33 @@
+version: '3.9'  # optional since v1.27.0
+services:
+ rideshare-dcc:
+  image: rideshare:1.0.0
+  container_name: rideshare-dcc
+  ports: 
+  - 3001:3000
+  environment:
+  - NODE_ENV=development
+ mysql-dcc:
+  image: mysql
+  container_name: mysql-dcc
+  ports:
+  - 3306:3306
+  environment:
+  - MYSQL_ROOT_PASSWORD=password
+  volumes:
+  - mysql-dcc-vol:/var/lib/mysql
+ myadmin-dcc:
+  image: phpmyadmin
+  container_name: myadmin-dcc
+  ports:
+  - 8080:80  
+  environment:
+  - PMA_HOST=mysql-dcc
+  - PMA_USER=root
+  - PMA_PASSWORD=password
+  #links:
+  #- mysql-comp  
+volumes:
+ mysql-dcc-vol: 
+  driver: local  
+

@@ -23,6 +23,7 @@ router.post('/add_vehicle', (req,res)=>{
 });
 
 router.post('/', function (req, res) {
-    console.log("getting vehicle", req.body);
+    console.log("WELCOME", req.body);
+    res.end();
 });
 module.exports = router;
