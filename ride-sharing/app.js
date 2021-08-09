@@ -15,18 +15,21 @@ app.use(bodyParser.json({ limit: '50mb' }));
 let endpoints = require('./enpdoints');
 app.use('/', endpoints);
 
-let db = require('./db').getInstance();
-db.query("SHOW DATABASES;", (err,resp)=>{
-  console.log('DB connection established successfully');
-}); 
+setTimeout(() => {
+  let db = require('./db').getInstance();
+  db.query("SHOW DATABASES;", (err, resp) => {
+    console.log('DB connection established successfully');
+  });
+}, 5000)
 
-process.on('SIGINT',  ()=>{
-	console.info('Got SIGINT (aka ctrl-c in docker). Graceful shutdown ', new Date().toISOString());
+
+process.on('SIGINT', () => {
+  console.info('Got SIGINT (aka ctrl-c in docker). Graceful shutdown ', new Date().toISOString());
   process.exit();
 });
 
 // quit properly on docker stop
-process.on('SIGTERM', ()=>{
+process.on('SIGTERM', () => {
   console.info('Got SIGTERM (docker container stop). Graceful shutdown ', new Date().toISOString());
   process.exit();
 })
