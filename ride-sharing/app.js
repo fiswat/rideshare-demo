@@ -13,6 +13,7 @@ app.listen(port, hostname, () => {
 });
 app.use(bodyParser.json({ limit: '50mb' }));
 let endpoints = require('./enpdoints');
+const { mapValuesLimit } = require('async');
 app.use('/', endpoints);
 
 setTimeout(() => {
@@ -33,3 +34,56 @@ process.on('SIGTERM', () => {
   console.info('Got SIGTERM (docker container stop). Graceful shutdown ', new Date().toISOString());
   process.exit();
 })
+
+
+// 2 arrays 
+/* let a = [1,4,7,9,10, 34, 66, 99 ,12]; //exists in B not in A
+let b = [2, 5,7,9,3,6, 7, 9 , 12, 33, 98, 99, 100 ] ;// add the missing numbers to A. sort both a and b
+let c = [];
+
+
+b.map((val, idx, arr)=>{
+  let flag = true; // missing
+  a.map((bval)=>{
+    val == bval && (flag = false) // found
+  });
+  flag && c.push(val) ;
+});
+a = a.concat(c);
+a = a.sort((X,Y)=>{
+  return X - Y;
+});
+b = b.sort((a,b)=>{
+  return a - b;
+});
+b = Array.from(new Set(b));
+console.log("A", a, "B", b);
+//console.log();
+a = [...a, c];
+//console.log("A", a);
+
+
+user 
+// in 2017 
+id name     joining_date           salary 
+12 Akash  2015-03-09 13:67:90    900000
+#SELECT * FROM employees WHERE YEAR(date) = 2015 ORDER BY salary DESC ;
+
+
+plaindrome (121 )
+
+let isPlaindrome = (value = 121)=>{
+  value = value.toString();
+  return value == value.trim().split('').reverse().join('');
+}
+
+let test = ["abc", "bba", "eye", 232, 'e ye']
+test.forEach((v,idx,arr)=>{
+  console.log(isPlaindrome(v));
+
+});
+((value = '121')=>{
+  return value == value.split('').reverse().join('');
+})() */
+
+
