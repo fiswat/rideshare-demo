@@ -11,6 +11,10 @@ let makeInitiList = (max) => {
 console.log(makeInitiList(50));
 
 let getPrimes = (numbers) => {
+    for(i =0 ;i++; i<=numbers.indexOf(Math.sqrt(numbers[numbers.length-1]))){
+
+
+    }
     let x = numbers.filter((cur, idx, arr) => {
         return cur * 2
     });
