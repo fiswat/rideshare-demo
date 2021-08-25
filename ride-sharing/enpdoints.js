@@ -6,19 +6,40 @@ const suggestBestAlgo = require('./Algo/FindAlgo').suggestBestAlgo;
 //let user = new Users();
 
 
+router.get('/rctest', (req,res)=>{
+    res.send({pid : process.pid})
+    
 
+});
+
+router.get('/printFibonacci', (req,res)=>{
+    let type = req.body.type;
+    let length = req.body.length;
+    let value = req.body.value;
+    if(type ==1 ){
+        
+    }
+    
+
+});
 router.post('/add_user', (req,res)=>{
     console.log(req.body);
     new Users().add_user(req.body.data, (err , resp)=>{
         return res.send({err, resp});
-    })
+    });
+
+    
 
 });
 
 router.post('/add_vehicle', (req,res)=>{
     console.log(req.body);
     new Vehicles().add_vehicle(req.body.data, (err , resp)=>{
-        return res.send({err, resp});
+        let cluster = require('cluster');
+        //console.log(cluster);
+        res.send({err, resp, pid: process.pid, ppid: process.ppid, clusterid: cluster.worker.id});
+        cluster.worker.kill();
+        
     })
 
 });
@@ -45,23 +66,27 @@ router.post('/do_cpu_tasks', (req,res)=>{
     if(type == 1){
         let cj = require('./Cores/cpu_jobs');
         let result = cj.printRandomStrings(n,l);
-        res.send(result);
+        res.send({result});
     }else{
-        let cp = require('./Cores/child_process');
-        let result = cp.start();
-        res.send(result);
+        const {fork} = require('child_process');
+        let child = fork('./Cores/cpu_jobs.js');
+        child.send('start');
+        child.on("message", (data)=>{
+            res.send({data});
+            child.kill();
+        })
+        child.on('spawn',()=>{
+            console.log('Forked');
+        });
+        child.on('exit', (code, signal)=>{
+            console.log("child exited", code, signal);
+        })
+        
+        //let cp = require('./Cores/child_process');
+        //let result = cp.start();
+        //console.log("ep",process.pid);
+        
     }
-    //times_parsed = JSON.parse(req.body.times);
-    times = times_parsed.map(cur=>{
-        return {
-            arrival : cur[0],
-            prep : cur[1]
-        }
-    });
-    let algos = ["SJF", "FIFO"];
-    let algo = suggestBestAlgo(times, algos)
-    res.status(200).send({algo});
-
 });
 
 router.post('/', function (req, res) {

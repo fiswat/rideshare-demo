@@ -1,19 +1,25 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cluster = require('cluster');
+const os = require('os');
 
 process.env.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'local'
 const env = process.env.NODE_ENV;
 const hostname = env == 'local' ? '127.0.0.1' : '0.0.0.0';
 const port = 3000;
+//cluster.fork();
 
 
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/ on ${env} environment`);
-});
+/* app.listen(port, hostname, () => {
+  console.log(os.totalmem()/1073741824,os.freemem()/1073741824);
+  console.log(os.cpus().length);
+  console.log(`Server running at http://${hostname}:${port}/ on ${env} environment as process ${process.pid} whose parent is ${process.ppid}`);
+}); */
 app.use(bodyParser.json({ limit: '50mb' }));
 let endpoints = require('./enpdoints');
-const { mapValuesLimit } = require('async');
+//const { mapValuesLimit } = require('async');
+//const { Console } = require('console');
 app.use('/', endpoints);
 
 setTimeout(() => {
@@ -85,5 +91,27 @@ test.forEach((v,idx,arr)=>{
 ((value = '121')=>{
   return value == value.split('').reverse().join('');
 })() */
+
+if(cluster.isMaster){
+  let cpus = os.cpus();
+  for (cpu of cpus){
+    cluster.fork();
+  }
+  cluster.on('exit', (listener,code, signal)=>{
+    onsole.log(`process ${process.pid} killed`);
+
+  });
+  
+  //console.log("cW",cluster.worker,cluster.workers );
+}else{
+  app.listen(port, hostname, () => {
+    console.log(os.totalmem()/1073741824,os.freemem()/1073741824);
+    console.log(os.cpus().length);
+    console.log(`Server running at http://${hostname}:${port}/ on ${env} environment as process ${process.pid} whose parent is ${process.ppid}`);
+  });
+
+  console.log("cw_worker", cluster.worker.id);
+
+}
 
 
