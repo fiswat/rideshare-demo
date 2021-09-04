@@ -36,13 +36,14 @@ router.post('/printFibonacci', (req, res) => {
             let sharedArrBuff = new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT * length);
             sharedInt32Arr = new Int32Array(sharedArrBuff);
         }
+        let logTable = [];
         for (let i = 0; i < threads; i++) {
             let isLast = i == threads - 1;
             let offset = isLast ? offsets.nth : offsets.inits
             let startIndex = i * offset;
             let worker = new Worker('./Cores/Thread.js', { workerData: { offset, startIndex, shared_memory } });
             let threadId = worker.threadId;
-            console.table([{ i, startIndex, endIndex : offset+startIndex , threadId }])
+            logTable = [...logTable, { i, startIndex, endIndex : offset+startIndex-1 , threadId }]
             worker.on('error', (err) => {
                 console.log(err);
             });
@@ -62,6 +63,7 @@ router.post('/printFibonacci', (req, res) => {
 
             }
         }
+        console.table(logTable);
     } else {
         return res.status(500).send({ result: "error", type: "threads" });
     }
