@@ -50,7 +50,7 @@ class Scrub {
 let instance;
 let getInstance = ()=>{ 
     if(!instance){
-        console.log('New Scrubber');
+        //console.log('New Scrubber');
         instance = new Scrub();
         Object.freeze(instance);
     }

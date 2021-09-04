@@ -45,7 +45,25 @@ class FibonacciSeries {
         }
     }
 
-    static withinIndexRange(startIndex, offset) {
+    static withinIndexRange(startIndex, endIndex) { // NOTE : TODO
+        if (endIndex >= 0 && startIndex >= 0 && endIndex>=startIndex) {
+            let series = [];
+            let length = offset + startIndex;
+            if (length >= 0 && length <= 2) {
+                for (let i = startIndex; i < length; i++) {
+                    series.push(FibonacciSeries.getValueOf(i));
+                }
+            } else {
+                series = [FibonacciSeries.getValueOf(startIndex), FibonacciSeries.getValueOf(startIndex + 1)];
+                series = FibonacciSeries.upToLength(offset, { series });
+            }
+            return series;
+        } else {
+            return [];
+        }
+    }
+
+    static withinIndexRangeOffset(startIndex, offset) {
         if (offset >= 0 && startIndex >= 0) {
             let series = [];
             let length = offset + startIndex;
@@ -63,7 +81,12 @@ class FibonacciSeries {
         }
     }
 
-    static withinValueRange(start_index, end_index) {
+    static withinValueRange(startValue, endValue) { // NOTE : TODO
+
+
+    }
+
+    static withinValueRangeOffset(startValue, offset) { // NOTE : TODO
 
 
     }
@@ -101,12 +124,12 @@ exports.FibonacciSeries = FibonacciSeries;
 //console.log(FibonacciSeries.isFibonacciSeries(13,21))
 
 
-console.log(FibonacciSeries.upToLength(60))
+//console.log(FibonacciSeries.upToLength(60))
 //console.log(FibonacciSeries.getValueOf(0))
 //console.log(FibonacciSeries.getValueOf(1))
-console.log(FibonacciSeries.withinIndexRange(0, 10))
-console.log(FibonacciSeries.withinIndexRange(10, 10))
-console.log(FibonacciSeries.withinIndexRange(21, 15))
+//console.log(FibonacciSeries.withinIndexRange(0, 10))
+//console.log(FibonacciSeries.withinIndexRange(10, 10))
+//console.log(FibonacciSeries.withinIndexRange(21, 15))
 /* console.log(FibonacciSeries.upToLength(30))
 console.log(FibonacciSeries.getValueOf(-1))
 console.log(FibonacciSeries.getValueOf(14))

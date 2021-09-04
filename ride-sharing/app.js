@@ -22,12 +22,16 @@ let endpoints = require('./enpdoints');
 //const { Console } = require('console');
 app.use('/', endpoints);
 
-setTimeout(() => {
-  let db = require('./db').getInstance();
-  db.query("SHOW DATABASES;", (err, resp) => {
-    console.log('DB connection established successfully');
-  });
-}, 5000)
+if(process.argv[0] == "db"){
+  setTimeout(() => {
+    let db = require('./db').getInstance();
+    db.query("SHOW DATABASES;", (err, resp) => {
+      console.log('DB connection established successfully');
+    });
+  }, 5000)
+
+}
+
 
 
 process.on('SIGINT', () => {
@@ -93,6 +97,7 @@ test.forEach((v,idx,arr)=>{
 })() */
 
 if(cluster.isMaster){
+  console.table({"cpus" : os.cpus().length, "mem" : `${Math.round( os.totalmem()/1073741824)} GB`, "freemem":  `${Math.round(os.freemem()/1073741824)} GB` })
   let cpus = os.cpus();
   for (cpu of cpus){
     cluster.fork();
@@ -105,13 +110,11 @@ if(cluster.isMaster){
   //console.log("cW",cluster.worker,cluster.workers );
 }else{
   app.listen(port, hostname, () => {
-    console.log(os.totalmem()/1073741824,os.freemem()/1073741824);
-    console.log(os.cpus().length);
-    console.log(`Server running at http://${hostname}:${port}/ on ${env} environment as process ${process.pid} whose parent is ${process.ppid}`);
+    
+    
+    console.log(`Server running at http://${hostname}:${port}/ on ${env} environment as cluster id : ${cluster.worker.id}, process id : ${process.pid} with parent process id : ${process.ppid}`);
   });
-
-  console.log("cw_worker", cluster.worker.id);
-
 }
+
 
 

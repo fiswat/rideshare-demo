@@ -87,7 +87,7 @@ let suggestBestAlgo = (times, algos)=>{
     return findBestAlgo(mapAlgoTimes(times,algos));
 }
 
-console.log(suggestBestAlgo(times, algos));
+//console.log(suggestBestAlgo(times, algos));
 
 exports.suggestBestAlgo = suggestBestAlgo;
 
