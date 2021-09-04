@@ -11,7 +11,34 @@ router.get('/rctest', (req, res) => {
 
 
 });
+router.post('/printThreadSafeIntegers', (req, res) => {
+    //let threads = req.body.threads;
+    let length = req.body.length;
+    //let shared_memory = req.body.shared_memory;
+    
+        const { Worker } = require('worker_threads');
+        let sharedArrBuff = new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT * length);
+        let sharedInt32Arr = new Int32Array(sharedArrBuff);
+        let result = [];
 
+        
+        
+        console.time('reader')
+        let reader_worker = new Worker('./Cores/ReaderThread.js', { workerData: { length } });
+        console.time('writer');
+        let writer_worker = new Worker('./Cores/WriterThread.js', { workerData: { length } });
+        reader_worker.postMessage(sharedInt32Arr);
+        writer_worker.postMessage(sharedInt32Arr)
+        reader_worker.on("exit", (code)=>{
+            console.log(` Reader exit Time ${console.timeEnd('reader')}`);
+            return res.status(200).send({ result: sharedInt32Arr, type: "Atomics" });
+        })
+        writer_worker.on("exit", (code)=>{
+            console.log(` Writer exit Time ${console.timeEnd('writer')}`);
+            //return res.status(200).send({ result: "error", type: "threads" });
+        })
+        
+});
 router.post('/printFibonacci', (req, res) => {
     let threads = req.body.threads;
     let length = req.body.length;
