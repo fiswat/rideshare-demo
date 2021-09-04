@@ -21,8 +21,8 @@ let endpoints = require('./enpdoints');
 //const { mapValuesLimit } = require('async');
 //const { Console } = require('console');
 app.use('/', endpoints);
-
-if(process.argv[0] == "db"){
+//console.log(process.argv);
+if(process.argv[2] == "db"){
   setTimeout(() => {
     let db = require('./db').getInstance();
     db.query("SHOW DATABASES;", (err, resp) => {
